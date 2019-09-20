@@ -1,2 +1,4 @@
 /node_modules/*
 secrets.txt
+bot_telegram.txt
+password_mail.txt

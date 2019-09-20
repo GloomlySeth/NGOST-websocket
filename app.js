@@ -82,21 +82,25 @@ if (app.get('env') === 'development') {
     });
 }
 
-//-----------------------------------------------
+//----------------------BOT----------------------
+ var bot = require('./telegram_bot');
+ var email = require('./email');
 //---------------------SERVER--------------------
 const WebSocket = require('ws');
 var Res = require('./res');
 var User = require('./models/user');
 var SToken = require('./models/sessionToken');
 var bCrypt = require('bcrypt-nodejs');
-const wss = new WebSocket.Server({ port: 21450 });
+const wss = new WebSocket.Server({ port: 21450,  clientTracking: true });
 const jwt = require('jsonwebtoken');
 var fs = require('fs');
 
 const secret = fs.readFileSync('secrets.txt', 'utf8');
-
+var clients = [];
 
 wss.on('connection', function connection(ws) {
+clients.push(ws);
+    console.log( ws.id);
     ws.on('message', function incoming(message) {
         console.log(message);
         let json;
@@ -228,6 +232,23 @@ wss.on('connection', function connection(ws) {
                     });
                 }
             });
+            return;
+        }
+        if(json.greeting === 'message'){
+            wss.clients.forEach(function each(client) {
+                if (client.readyState === WebSocket.OPEN) {
+                    client.send('hello everyone!');
+                }
+                clients[0].send('first');
+            });
+
+            return;
+        }
+        if(json.greeting === 'message_telegram'){
+            if(json.chatId) {ws.send(JSON.stringify(Res.err));
+            bot.sendMessage(json.chatId, 'hello fella');}
+            if(!json.email) { return;}
+            email.sendMessage(json.email);
             return;
         }
         ws.send(JSON.stringify(Res.invalid));

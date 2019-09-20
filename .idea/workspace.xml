@@ -59,7 +59,7 @@
       <workItem from="1568791317231" duration="18302000" />
       <workItem from="1568879733155" duration="7859000" />
       <workItem from="1568890184280" duration="4290000" />
-      <workItem from="1568960231163" duration="5479000" />
+      <workItem from="1568960231163" duration="16623000" />
     </task>
     <servers />
   </component>
@@ -104,9 +104,21 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/app.js</url>
-          <line>232</line>
+          <line>253</line>
           <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="18" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/telegram_bot.js</url>
+          <line>14</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="21" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/email.js</url>
+          <line>15</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="22" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
