@@ -58,7 +58,8 @@
       <workItem from="1568742606098" duration="1326000" />
       <workItem from="1568791317231" duration="18302000" />
       <workItem from="1568879733155" duration="7859000" />
-      <workItem from="1568890184280" duration="977000" />
+      <workItem from="1568890184280" duration="4290000" />
+      <workItem from="1568960231163" duration="5479000" />
     </task>
     <servers />
   </component>
@@ -70,7 +71,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
@@ -98,6 +101,12 @@
           <url>file://$PROJECT_DIR$/passport/init.js</url>
           <line>8</line>
           <option name="timeStamp" value="13" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/app.js</url>
+          <line>232</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="18" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

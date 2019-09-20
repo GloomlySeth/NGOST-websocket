@@ -98,25 +98,34 @@ const secret = fs.readFileSync('secrets.txt', 'utf8');
 
 wss.on('connection', function connection(ws) {
     ws.on('message', function incoming(message) {
-        let json = JSON.parse(message);
+        console.log(message);
+        let json;
+        try {
+            json = JSON.parse(message);
+        }
+        catch (e) {
+            ws.send(JSON.stringify(Res.err));
+            return;
+        }
         if(json.greeting === 'auth'){
+            if(!json.username) {ws.send(JSON.stringify(Res.err)); return;}
             User.findOne({ 'username' :  json.username },
                 function(err, user) {
                     // In case of any error, return using the done method
                     if (err) {
-                        ws.send(Res.err);
+                        ws.send(JSON.stringify(Res.err));
                         return;
                     }
                     // Username does not exist, log the error and redirect back
                     if (!user){
                         console.log('User Not Found with username '+json.username);
-                        ws.send(Res.notFound);
+                        ws.send(JSON.stringify(Res.notFound));
                         return;
                     }
                     // User exists but wrong password, log the error
                     if (!isValidPassword(user, json.password)){
                         console.log('Invalid Password');
-                        ws.send(Res.incPass); // redirect back to login page
+                        ws.send(JSON.stringify(Res.incPass)); // redirect back to login page
                         return;
                     }
                     // create token
@@ -131,57 +140,68 @@ wss.on('connection', function connection(ws) {
                         }
                         console.log('Token saved');
                     });
-                    ws.send(Res.ok);
+                    ws.send(JSON.stringify(Res.ok));
                 }
             );
+            return;
         }
         if (json.greeting === 'logout'){
-
+        if (!json.token){ws.send(JSON.stringify(Res.err)); return;}
             SToken.findOne({ 'token' :  json.token }, function(err, token) {
                 // In case of any error, return using the done method
                 if (err){
                     console.log('Error in remove token: '+err);
-                    ws.send(Res.err);
+                    ws.send(JSON.stringify(Res.err));
                     return ;
                 }
                 // already exists
                 if (token) {
                     token.remove();
                     console.log('Token removed');
-                    ws.send(Res.ok);
+                    ws.send(JSON.stringify(Res.ok));
                     return;
                 }
             });
+            return;
         }
         if(json.greeting === 'access'){
-
+            if(!json.token){
+                ws.send(JSON.stringify(Res.err));
+                return;
+            }
             SToken.findOne({ 'token' :  json.token }, function(err, token) {
                 // In case of any error, return using the done method
                 if (err){
                     console.log('Error in access by token: '+err);
-                    ws.send(Res.err);
+                    ws.send(JSON.stringify(Res.err));
                     return ;
                 }
                 // already exists
                 if (token) {
-                    ws.send(Res.allow);
+                    ws.send(JSON.stringify(Res.allow));
                     return;
                 }
-                ws.send(Res.deny);
+                ws.send(JSON.stringify(Res.deny));
             });
+            return;
         }
         if (json.greeting === 'signup'){
+            if(!json.username) {ws.send(JSON.stringify(Res.err)); return;}
+            if(!json.password) {ws.send(JSON.stringify(Res.err)); return;}
+            if(!json.email) {ws.send(JSON.stringify(Res.err)); return;}
+            if(!json.firstName) {ws.send(JSON.stringify(Res.err)); return;}
+            if(!json.lastName) {ws.send(JSON.stringify(Res.err)); return;}
             User.findOne({ 'username' :  username }, function(err, user) {
                 // In case of any error, return using the done method
                 if (err){
                     console.log('Error in SignUp: '+err);
-                    ws.send(Res.err);
+                    ws.send(JSON.stringify(Res.err));
                     return ;
                 }
                 // already exists
                 if (user) {
                     console.log('User already exists with username: ' + json.username);
-                    ws.send(Res.exist);
+                    ws.send(JSON.stringify(Res.exist));
                     return ;
                 } else {
                     // if there is no user with that email
@@ -203,12 +223,14 @@ wss.on('connection', function connection(ws) {
                             throw err;
                         }
                         console.log('User Registration succesful');
-                        ws.send(Res.ok);
+                        ws.send(JSON.stringify(Res.ok));
                         return;
                     });
                 }
             });
+            return;
         }
+        ws.send(JSON.stringify(Res.invalid));
     });
 
     ws.send('well met!');
